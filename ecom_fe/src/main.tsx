@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import axios from "axios";
+import { HelmetProvider } from "react-helmet-async";
 
 import Home from "./pages/Home.tsx";
 import ProductDetails from "./pages/ProductDetails.tsx";
@@ -28,6 +29,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
   </StrictMode>
 );
