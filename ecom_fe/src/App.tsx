@@ -29,7 +29,7 @@ const App = () => {
 
       <footer>
         <div className="text-center">
-          &copy; 2025 T94 Shop. All Rights Reserved.
+          &copy; 2025. T94 Shop. All Rights Reserved.
         </div>
       </footer>
     </div>
