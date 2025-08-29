@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { Store } from "../Store";
 import type { ICartItem } from "../types/Cart";
 import { convertProductToCartItem } from "../utils";
+import { toast } from "react-toastify";
 
 const ProductItem = ({ product }: { product: IProduct }) => {
   const { state, dispatch } = useContext(Store);
@@ -26,6 +27,8 @@ const ProductItem = ({ product }: { product: IProduct }) => {
       type: "CART_ADD_ITEM",
       payload: { ...item, quantity },
     });
+
+    toast.success("Product added to the cart");
   };
 
   return (
@@ -41,17 +44,16 @@ const ProductItem = ({ product }: { product: IProduct }) => {
 
         <Rating rating={product.rating} numReviews={product.numReviews} />
 
-        <Card.Text>€{product.price}</Card.Text>
-
+        <Card.Text>${product.price}</Card.Text>
         {product.countInStock === 0 ? (
           <Button variant="light" disabled>
-            Out of Stock
+            Out of stock
           </Button>
         ) : (
           <Button
             onClick={() => addToCartHandler(convertProductToCartItem(product))}
           >
-            Add to Cart
+            Add to cart
           </Button>
         )}
       </Card.Body>
