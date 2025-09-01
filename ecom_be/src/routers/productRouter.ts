@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { ProductModel } from "@/models/productModel";
 
-export const productRouter = Router();
+const productRouter = Router();
 
 // /api/products
 productRouter.get(
@@ -25,3 +25,5 @@ productRouter.get(
     }
   })
 );
+
+export default productRouter;
