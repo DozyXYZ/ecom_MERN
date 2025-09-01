@@ -1,6 +1,8 @@
-import { IProduct } from "@/types/Product";
+import bcrypt from "bcryptjs";
+import { Product } from "@/models/productModel";
+import { User } from "@/models/userModel";
 
-export const sampleProducts: IProduct[] = [
+export const sampleProducts: Product[] = [
   {
     name: "Nike Slim shirt",
     slug: "nike-slim-shirt",
@@ -11,7 +13,8 @@ export const sampleProducts: IProduct[] = [
     brand: "Nike",
     rating: 4.5,
     numReviews: 10,
-    description: "high quality shirt",
+    description:
+      "A sleek, form-fitting shirt designed for ultimate comfort and style. Made with breathable fabric, it’s perfect for both workouts and casual wear.",
   },
   {
     name: "Adidas Fit Shirt",
@@ -23,7 +26,8 @@ export const sampleProducts: IProduct[] = [
     brand: "Adidas",
     rating: 4.0,
     numReviews: 10,
-    description: "high quality product",
+    description:
+      "Engineered for an active lifestyle, this shirt offers a snug yet flexible fit. Lightweight and moisture-wicking, it keeps you cool during any activity.",
   },
   {
     name: "Lacoste Free Pants",
@@ -35,7 +39,8 @@ export const sampleProducts: IProduct[] = [
     brand: "Lacoste",
     rating: 4.8,
     numReviews: 17,
-    description: "high quality product",
+    description:
+      "Classic Lacoste pants crafted for effortless movement and everyday comfort. Soft, durable fabric makes them ideal for casual outings or lounging.",
   },
   {
     name: "Nike Slim Pant",
@@ -47,6 +52,22 @@ export const sampleProducts: IProduct[] = [
     brand: "Nike",
     rating: 4.5,
     numReviews: 14,
-    description: "high quality product",
+    description:
+      "Modern slim-fit pants that combine performance with style. Designed for flexibility and a streamlined look, perfect for training or casual wear.",
+  },
+];
+
+export const sampleUsers: User[] = [
+  {
+    name: "John Silksong",
+    email: "jsadmin@example.com",
+    password: bcrypt.hashSync("123"),
+    isAdmin: true,
+  },
+  {
+    name: "Jane Doe",
+    email: "jane@example.com",
+    password: bcrypt.hashSync("456"),
+    isAdmin: false,
   },
 ];
