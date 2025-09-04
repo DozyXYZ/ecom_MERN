@@ -18,6 +18,7 @@ import Home from "./pages/Home.tsx";
 import ProductDetails from "./pages/ProductDetails.tsx";
 import CartPage from "./pages/CartPage.tsx";
 import SignInPage from "./pages/SignInPage.tsx";
+import SignUpPage from "./pages/SignUpPage.tsx";
 
 axios.defaults.baseURL =
   process.env.NODE_ENV === "development" ? "http://localhost:4000" : "/";
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="product/:slug" element={<ProductDetails />} />
       <Route path="cart" element={<CartPage />} />
       <Route path="signin" element={<SignInPage />} />
+      <Route path="signup" element={<SignUpPage />} />
     </Route>
   )
 );
