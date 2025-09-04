@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { UserModel } from "@/models/userModel";
+import { UserModel, User } from "@/models/userModel";
 import bcrypt from "bcryptjs";
 import { generateToken } from "@/utils";
 
@@ -25,6 +25,26 @@ userRouter.post(
       }
     }
     res.status(401).json({ message: "Invalid email or password" });
+  })
+);
+
+// POST /api/users/signup
+userRouter.post(
+  "/signup",
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await UserModel.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password),
+    } as User);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user),
+    });
   })
 );
 
