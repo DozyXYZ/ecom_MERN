@@ -51,8 +51,6 @@ const ShippingAddressPage = () => {
 
   return (
     <div>
-      <h1>Shipping Address</h1>
-
       <CheckOutSteps step1 step2></CheckOutSteps>
 
       <div className="container small-container">
