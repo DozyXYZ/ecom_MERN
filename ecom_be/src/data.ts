@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { Product } from "@/models/productModel";
-import { User } from "@/models/userModel";
+import { Product } from "./models/productModel";
+import { User } from "./models/userModel";
 
 export const sampleProducts: Product[] = [
   {

@@ -1,20 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "rootDir": "src",
-    "baseUrl": "./",
-    "outDir": "dist",
-    "removeComments": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "es2015",
+    "outDir": "./build",
     "strict": true,
-    "skipLibCheck": true,
-    "paths": { "@/*": ["src/*"] },
-    "typeRoots": ["./src/@types"],
+    "module": "commonjs",
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  }
 }
