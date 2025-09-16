@@ -1,16 +1,100 @@
-import { useGetOrderDetailsQuery } from "../hooks/orderHooks";
+import {
+  useGetOrderDetailsQuery,
+  useGetPaypalClientIdQuery,
+  usePayOrderMutation,
+} from "../hooks/orderHooks";
 import { Link, useParams } from "react-router-dom";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { getError } from "../utils";
 import type { ApiError } from "../types/ApiError";
-import { Card, Col, ListGroup, Row } from "react-bootstrap";
+import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
+import {
+  DISPATCH_ACTION,
+  PayPalButtons,
+  SCRIPT_LOADING_STATE,
+  usePayPalScriptReducer,
+  type PayPalButtonsComponentProps,
+} from "@paypal/react-paypal-js";
+import { useEffect } from "react";
 
 const OrderPage = () => {
   const params = useParams();
   const { id: orderId } = params;
 
-  const { data: order, isLoading, error } = useGetOrderDetailsQuery(orderId!);
+  const {
+    data: order,
+    isLoading,
+    error,
+    refetch,
+  } = useGetOrderDetailsQuery(orderId!);
+
+  const { mutate: payOrder, isPending: loadingPay } = usePayOrderMutation();
+
+  const testPayHandler = async () => {
+    try {
+      await payOrder({ orderId: orderId! });
+      toast.success("Order is paid");
+    } catch (err) {
+      toast.error(getError(err as ApiError));
+    }
+  };
+
+  const [{ isPending, isRejected }, paypalDispatch] = usePayPalScriptReducer();
+
+  const { data: paypalConfig } = useGetPaypalClientIdQuery();
+
+  useEffect(() => {
+    if (paypalConfig && paypalConfig.clientId) {
+      const loadPaypalScript = async () => {
+        paypalDispatch({
+          type: DISPATCH_ACTION.RESET_OPTIONS,
+          value: { clientId: paypalConfig!.clientId, currency: "EUR" },
+        });
+        paypalDispatch({
+          type: DISPATCH_ACTION.LOADING_STATUS,
+          value: SCRIPT_LOADING_STATE.PENDING,
+        });
+      };
+      loadPaypalScript();
+    }
+  }, [paypalConfig, paypalDispatch]);
+
+  const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
+    style: { layout: "vertical" },
+    createOrder(_, actions) {
+      return actions.order
+        .create({
+          intent: "CAPTURE",
+          purchase_units: [
+            {
+              amount: {
+                currency_code: "EUR",
+                value: order!.totalPrice.toString(),
+              },
+            },
+          ],
+        })
+        .then((orderID: string) => {
+          return orderID;
+        });
+    },
+    onApprove(_, actions) {
+      return actions.order!.capture().then(async (details) => {
+        try {
+          await payOrder({ orderId: orderId!, ...details });
+          refetch();
+          toast.success("Order is paid successfully");
+        } catch (err) {
+          toast.error(getError(err as ApiError));
+        }
+      });
+    },
+    onError: (err) => {
+      toast.error(getError(err as ApiError));
+    },
+  };
 
   return isLoading ? (
     <LoadingBox />
@@ -122,6 +206,26 @@ const OrderPage = () => {
                 <Col>€{order.totalPrice.toFixed(2)}</Col>
               </Row>
             </ListGroup.Item>
+
+            {!order.isPaid && (
+              <ListGroup.Item>
+                {isPending ? (
+                  <LoadingBox />
+                ) : isRejected ? (
+                  <MessageBox variant="danger">
+                    Error in connecting to PayPal
+                  </MessageBox>
+                ) : (
+                  <div>
+                    <PayPalButtons
+                      {...paypalbuttonTransactionProps}
+                    ></PayPalButtons>
+                    <Button onClick={testPayHandler}>Test Pay</Button>
+                  </div>
+                )}
+                {loadingPay && <LoadingBox />}
+              </ListGroup.Item>
+            )}
           </ListGroup>
         </Col>
       </Row>
