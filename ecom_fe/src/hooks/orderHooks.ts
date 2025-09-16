@@ -53,3 +53,10 @@ export const usePayOrderMutation = () => {
     },
   });
 };
+
+export const useGetOrderHistoryQuery = () =>
+  useQuery({
+    queryKey: ["order-history"],
+    queryFn: async () =>
+      (await apiClient.get<Order[]>(`api/orders/history`)).data,
+  });
