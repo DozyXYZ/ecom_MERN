@@ -11,6 +11,7 @@ import { Link, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Store } from "./Store";
+import { LinkContainer } from "react-router-bootstrap";
 
 const App = () => {
   const {
@@ -61,6 +62,10 @@ const App = () => {
 
             {userInfo ? (
               <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                <LinkContainer to="/orderhistory">
+                  <NavDropdown.Item>Order History</NavDropdown.Item>
+                </LinkContainer>
+
                 <Link
                   className="dropdown-item"
                   to="#signout"
