@@ -32,6 +32,16 @@ orderRouter.post(
   })
 );
 
+// GET /api/orders/history
+orderRouter.get(
+  "/history",
+  isAuth,
+  asyncHandler(async (req: Request, res: Response) => {
+    const orders = await OrderModel.find({ user: req.user._id });
+    res.json(orders);
+  })
+);
+
 // GET /api/orders/:id
 orderRouter.get(
   "/:id",
